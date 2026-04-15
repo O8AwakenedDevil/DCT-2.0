@@ -1,0 +1,174 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Lato", sans-serif;
+    margin: 0;
+}
+
+#banner {
+    padding: 40px;
+    text-align: center;
+    background: rgb(137, 138, 196);
+    color: white;
+}
+
+.menu {
+    display: flex;
+    background-color: rgb(162, 170, 219);
+}
+
+.menu a {
+    color: #ffffff;
+    padding: 14px 20px;
+    text-decoration: none;
+    text-align: center;
+    font-weight: bold;
+}
+
+.menu a:hover, a.active{
+    background-color: rgb(255, 242, 224);
+    color: #000000;
+}
+
+.container {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.side {
+    flex: 20%;
+    background-color: rgb(255, 242, 224);
+    padding: 20px;
+}
+
+.sideKlasse {
+    flex: 20%;
+    background-color: rgb(255, 242, 224);
+    padding: 20px;
+}
+
+.sideKlasse a {
+    display: flex;
+    width: 100%;
+    color: #000000;
+    font-weight: bold;
+    font-size: 22px;
+    text-decoration: none;
+    padding: 18px 18px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    text-align: center;
+}
+
+.sideKlasse a:hover,
+.sideKlasse a.active,
+.sideKlasse a[aria-current="true"] {
+    background-color: rgb(162, 170, 219);
+    color: #ffffff;
+}
+
+#games-container, h2 {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.game-card {
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 250px;
+    height: 200px;
+    text-align: center;
+}
+
+.game-card h3 {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.game-card p {
+    font-size: 1rem;
+    color: black;
+}
+
+#rang a{
+    margin: auto;
+    text-align: center;
+}
+
+.mainHome {
+    flex: 80%;
+    background-color: rgba(255, 242, 224, 0.4);
+    padding: 20px;
+}
+
+.main {
+    flex: 80%;
+    background-color: rgba(255, 242, 224, 0.4);
+    padding: 20px;
+}
+
+.main a {
+    text-decoration: none;
+}
+
+.logo{
+    width: 50px;
+    height: 50px;
+    mix-blend-mode: multiply;
+}
+
+h2 {
+   color: rgb(137, 138, 196)
+}
+
+h3 {
+    padding-left: 10px;
+}
+
+table {
+    text-align: center;
+    border: none;
+    padding: 15px;
+    margin: 10px;
+    float: center;
+    width: 98%;
+}
+
+th {
+    padding: 12px;
+    background-color: rgb(162, 170, 219, 0.4)
+}
+
+tr:nth-child(even) {
+    background-color: rgb(255, 242, 224);
+}
+
+tr:nth-child(oneven) {
+    background-color: rgb(162, 170, 219);
+}
+
+footer {
+    padding: 10px;
+    text-align: center;
+    background: rgb(192, 201, 238);
+    font-weight: bold;
+    font-size: 12px;
+}
+
+iframe {
+    height: 100vh;
+    width: 100%;
+    border: none;
+}
+
+@media screen and (max-width: 900px) {
+    .container, .menu {
+        flex-direction: column;
+    }
+}
