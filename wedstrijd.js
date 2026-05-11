@@ -1,47 +1,114 @@
 "use strict";
 
-// Handle clicks on League links (kl1..kl8) and toggle visibility of panes (k1..k8)
+import { db } from "./firebase-config.js";
+import { collection, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
+
+const weekDates = {
+    1: "23/03 - 29/03",
+    2: "30/03 - 05/04",
+    3: "06/04 - 12/04",
+    4: "13/04 - 19/04",
+    5: "20/04 - 26/04",
+    6: "27/04 - 03/05",
+    7: "04/05 - 10/05",
+    8: "11/05 - 17/05",
+    9: "18/05 - 24/05",
+};
+
+let activeWeek = 1;
+
+function formatDatumTijd(datumString) {
+    const datum = new Date(datumString);
+    const dag = String(datum.getDate()).padStart(2, '0');
+    const maand = String(datum.getMonth() + 1).padStart(2, '0');
+    const jaar = datum.getFullYear();
+
+    return `${dag}-${maand}-${jaar}`;
+}
+
+function checkWedstrijdVerlopen(datumTijd, uur) {
+    if (!datumTijd || !uur) return "❌";
+
+    const wedstrijdDatum = new Date(`${datumTijd}T${uur}:00`);
+
+    return wedstrijdDatum.getTime() < new Date().getTime() ? "✔" : "❌";
+}
+
+async function haalWedstrijdenOp() {
+    const container = document.getElementById("tablesContainer");
+    container.innerHTML = "";
+
+    try {
+        const querySnapshot = await getDocs(collection(db, `W${activeWeek}`));
+
+        if (querySnapshot.empty) {
+            container.innerHTML = "<p>Geen wedstrijden gevonden.</p>";
+            return;
+        }
+
+        const perKlasse = {};
+        querySnapshot.forEach((docSnap) => {
+            const w = docSnap.data();
+        
+            if (!perKlasse[w.klasse]) perKlasse[w.klasse] = [];
+            perKlasse[w.klasse].push({ id: docSnap.id, ...w, status: checkWedstrijdVerlopen(w.datumTijd, w.uur)});
+        });
+
+        Object.keys(perKlasse).sort().forEach(klasse => {
+            let html = `<h3>${klasse}</h3><table border='1'><tr><th>Speler 1</th><th>Speler 2</th><th>Datum</th><th>Uur</th><th>Status</th></tr>`;
+            perKlasse[klasse].forEach(w => {
+                html += `<tr>
+                <td>${w.speler1}</td><td>${w.speler2}</td>
+                <td>${formatDatumTijd(w.datumTijd)}</td><td>${w.uur}</td><td>${w.status}</td></tr>`;
+            });
+            html += "</table>";
+            container.innerHTML += html;
+        });
+    } catch (error) {
+        console.error("Fout bij het ophalen van wedstrijden: ", error);
+    }
+}
+
+function setActiveWeek(week) {
+    activeWeek = week;
+    document.getElementById("weekLegend").textContent = `Wedstrijden: week ${week} (${weekDates[week]})`;
+
+    for (let i = 1; i <= 9; i++) {
+        const lnk = document.getElementById(`wk${i}`);
+        
+        if (!lnk) continue;
+        lnk.classList.toggle("active", i === week);
+
+        if (i === week) lnk.setAttribute("aria-current", "true");
+        else lnk.removeAttribute("aria-current");
+    }
+    haalWedstrijdenOp();
+}
+
 document.addEventListener("DOMContentLoaded", () => {
-    const paneIds = ["w1", "w2", "w3", "w4", "w5", "w6", "w7", "w8", "w9"]; // valid panes
-    const linkIds = ["wk1", "wk2", "wk3", "wk4", "wk5", "wk6", "wk7", "wk8", "wk9"]; // corresponding links
+    document.getElementById("dataForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
 
-    const panes = paneIds
-        .map((id) => document.getElementById(id))
-        .filter((el) => el);
-    const links = linkIds
-        .map((id) => document.getElementById(id))
-        .filter((el) => el);
-
-    const showPane = (targetId) => {
-        // Toggle the visibility of content panes
-        panes.forEach((p) => {
-            p.hidden = p.id !== targetId;
-        });
-        // Update active state on the side links (optional, for styling)
-        links.forEach((lnk) => {
-            if (!lnk) return;
-            if (lnk.id.replace("wk", "w") === targetId) {
-                lnk.classList.add("active");
-                lnk.setAttribute("aria-current", "true");
-            } else {
-                lnk.classList.remove("active");
-                lnk.removeAttribute("aria-current");
-            }
-        });
-    };
-
-    // Wire up click handlers for each side link
-    links.forEach((lnk) => {
-        lnk.addEventListener("click", (e) => {
-            e.preventDefault();
-            const targetPane = lnk.id.replace("wk", "w");
-            showPane(targetPane);
-        });
+        try {
+            await addDoc(collection(db, `W${activeWeek}`), {
+                speler1: document.getElementById("speler1").value,
+                speler2: document.getElementById("speler2").value,
+                datumTijd: document.getElementById("datumTijd").value,
+                uur: document.getElementById("uur").value,
+                klasse: document.getElementById("klasse").value,
+            });
+            alert("Wedstrijd toegevoegd");
+            document.getElementById("dataForm").reset();
+            await haalWedstrijdenOp();
+        } catch (error) {
+            console.error("Fout bij opslaan:", error);
+        }
     });
 
-    // Optional: If none is visible initially, you can set a default
-    // Uncomment to default to League 1
-    if (panes.every(p => p.hidden)) {
-    showPane("w1");
+    for (let i = 1; i <= 9; i++) {
+        const lnk = document.getElementById(`wk${i}`);
+        if (lnk) lnk.addEventListener("click", (e) => { e.preventDefault(); setActiveWeek(i); });
     }
+
+    setActiveWeek(1);
 });

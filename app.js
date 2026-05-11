@@ -1,20 +1,7 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";
-import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
+"use strict";
 
-// Firebase configuratie
-const firebaseConfig = {
-  apiKey: "AIzaSyBh69I9WATUhZ1pdbjZo58ELONSWNRQzBg",
-  authDomain: "dct-dart.firebaseapp.com",
-  projectId: "dct-dart",
-  storageBucket: "dct-dart.firebasestorage.app",
-  messagingSenderId: "291022570503",
-  appId: "1:291022570503:web:632ad275b92bcb04cc56a2",
-  measurementId: "G-0ENPQD91XD"
-};
-
-// Firebase initialiseren
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+import { db } from "./firebase-config.js";
+import { collection, getDocs } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
 
 // Functie om de datum te formatteren naar dd-mm-yyyy
 function formatDate(dateString) {
@@ -41,7 +28,7 @@ async function haalWedstrijdenOp() {
         querySnapshot.forEach(doc => {
           const wedstrijd = doc.data();
           const datumTijd = wedstrijd.datumTijd; // Zorg ervoor dat dit de string is
-          const uur = wedstrijd.Uur; // Zorg ervoor dat dit de string is
+          const uur = wedstrijd.uur; // Zorg ervoor dat dit de string is
   
           // Combineer datum en uur om een volledige datum/tijd te krijgen
           const volledigeDatumTijd = new Date(`${datumTijd}T${uur}:00`);
@@ -57,7 +44,7 @@ async function haalWedstrijdenOp() {
       }
   
       // Sorteer wedstrijden op datum en tijd (alleen de 4 meest recente)
-      wedstrijden.sort((a, b) => new Date(`${a.datumTijd}T${a.Uur}:00`) - new Date(`${b.datumTijd}T${b.Uur}:00`));
+      wedstrijden.sort((a, b) => new Date(`${a.datumTijd}T${a.uur}:00`) - new Date(`${b.datumTijd}T${b.uur}:00`));
       const aankomendeWedstrijden = wedstrijden.slice(0, 3); // Alleen de 4 meest recente
   
       if (aankomendeWedstrijden.length > 0) {
@@ -69,7 +56,7 @@ async function haalWedstrijdenOp() {
               <p><strong>Speler 1:</strong> ${wedstrijd.speler1}</p>
               <p><strong>Speler 2:</strong> ${wedstrijd.speler2}</p>
               <p><strong>Datum:</strong> ${wedstrijd.formattedDatum}</p> <!-- Gebruik de geformatteerde datum -->
-              <p><strong>Tijd:</strong> ${wedstrijd.Uur}</p>
+              <p><strong>Tijd:</strong> ${wedstrijd.uur}</p>
             </div>
           `;
           wedstrijdenContainer.innerHTML += wedstrijdHTML;

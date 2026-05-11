@@ -2,7 +2,7 @@
 <html lang="nl-BE">
 
 <head>
-    <script src="DCT.js" type="module"></script>
+    <script src="menu.js" type="module"></script>
     <script src="wedstrijd.js" type="module"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -15,7 +15,8 @@
     <header>
         <div id="banner"><h1>Welkom op Dartcounter DCT</h1></div>
     </header>
-    <div class="menu"> 
+    <div class="menu">
+        <button class="menu-toggle" aria-label="Menu" aria-expanded="false">&#9776;</button> 
         <a href="index.html"><i class="fa fa-fw fa-home"></i>Home</a>
         <a href="klassementen.html">Klassementen</a>
         <a href="wedstrijden.html" class="active">Wedstrijden</a>
@@ -36,34 +37,39 @@
             <a href="#" id="wk8">Week 8</a>
             <a href="#" id="wk9">Week 9</a>
         </div>
+
         <div class="main">
-            <span id="w1" hidden>
-                <iframe src="w1.html"></iframe>
-            </span>
-            <span id="w2" hidden>
-                <iframe src="w2.html"></iframe>
-            </span>
-            <span id="w3" hidden>
-                <iframe src="w3.html"></iframe>
-            </span>
-            <span id="w4" hidden>
-                <iframe src="w4.html"></iframe>
-            </span>
-            <span id="w5" hidden>
-                <iframe src="w5.html"></iframe>
-            </span>
-            <span id="w6" hidden>
-                <iframe src="w6.html"></iframe>
-            </span>
-            <span id="w7" hidden>
-                <iframe src="w7.html"></iframe>
-            </span>
-            <span id="w8" hidden>
-                <iframe src="w8.html"></iframe>
-            </span>
-            <span id="w9" hidden>
-                <iframe src="w9.html"></iframe>
-            </span>
+            <fieldset style="margin-top: 10px;">
+                <legend id="weekLegend">Wedstrijden: Week 1 (23/03 - 29/03)</legend>
+                <form id="dataForm">
+                    <label for="speler1">Speler 1:</label>
+                    <input type="text" id="speler1" required>&nbsp;&nbsp;&nbsp;
+
+                    <label for="speler2">Speler 2:</label>
+                    <input type="text" id="speler2" required>&nbsp;&nbsp;&nbsp;
+
+                    <label for="datumTijd">Datum:</label>
+                    <input type="date" id="datumTijd" required>&nbsp;&nbsp;&nbsp;
+
+                    <label for="uur">Uur:</label>
+                    <input type="time" id="uur" required>&nbsp;&nbsp;&nbsp;
+
+                    <label for="klasse">Klasse:</label>
+                    <select id="klasse" required>
+                        <option value="Klasse1">Klasse 1</option>
+                        <option value="Klasse2">Klasse 2</option>
+                        <option value="Klasse3">Klasse 3</option>
+                        <option value="Klasse4">Klasse 4</option>
+                        <option value="Klasse5">Klasse 5</option>
+                        <option value="Klasse6">Klasse 6</option>
+                        <option value="Klasse7">Klasse 7</option>
+                        <option value="Klasse8">Klasse 8</option>
+                    </select>&nbsp;&nbsp;&nbsp;
+
+                    <button type="submit">Toevoegen</button>
+                </form>
+            </fieldset>
+            <div id="tablesContainer"></div>
         </div>
     </div>
 </body>

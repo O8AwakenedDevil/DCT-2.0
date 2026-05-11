@@ -5,6 +5,9 @@
 body {
     font-family: "Lato", sans-serif;
     margin: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
 #banner {
@@ -35,6 +38,7 @@ body {
 .container {
     display: flex;
     flex-wrap: wrap;
+    flex: 1;
 }
 
 .side {
@@ -149,8 +153,8 @@ tr:nth-child(even) {
     background-color: rgb(255, 242, 224);
 }
 
-tr:nth-child(oneven) {
-    background-color: rgb(162, 170, 219);
+tr:nth-child(odd) {
+    background-color: rgb(162, 170, 219, 0.1);
 }
 
 footer {
@@ -167,8 +171,36 @@ iframe {
     border: none;
 }
 
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 28px;
+    cursor: pointer;
+    padding: 10px 20px;
+    margin-left: auto;
+}
+
 @media screen and (max-width: 900px) {
-    .container, .menu {
+    .container {
         flex-direction: column;
+    }
+
+    .menu {
+        flex-wrap: wrap;
+    }
+
+    .menu a {
+        display: none;
+        width: 100%;
+    }
+
+    .menu-toggle {
+        display: block;
+    }
+
+    .menu.open a {
+        display: block;
     }
 }
